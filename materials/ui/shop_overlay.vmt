@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "ui/shop_overlay"
+	"$translucent" "1"
+}

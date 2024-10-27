@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	"$basetexture" "ui/propper_num_background"
+	"$translucent" "1"
+}

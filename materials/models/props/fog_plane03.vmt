@@ -1,0 +1,17 @@
+"UnlitGeneric"
+{
+	"$baseTexture" "models/props/mapfog"
+	$translucent 1
+	$additive 1
+	"$model" "1"
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" "$basetexturetransform"
+			"texturescrollrate" 0.005
+			"texturescrollangle" 90
+		}
+	}
+}
+

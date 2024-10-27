@@ -1,0 +1,6 @@
+"UnlitGeneric"
+{
+	"$basetexture" "ui/health_icon"
+	"$translucent" "1"
+	"$color" "{255 255 255}"   // Initial color
+}
