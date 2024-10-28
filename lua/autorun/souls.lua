@@ -147,6 +147,8 @@ if CLIENT then
         end
     end
 
+// Awesome Sound //
+
     net.Receive("PlaySoulEffect", function()
         local victimCenterPos = net.ReadVector()
         local attacker = net.ReadEntity()
