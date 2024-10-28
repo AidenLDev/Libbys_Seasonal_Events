@@ -7,8 +7,10 @@ if SERVER then
     local COLLECTION_RANGE = 50
     local HEALTH_MIN = 15
     local HEALTH_MAX = 23
-    local CANDYCORN_MIN = 23
-    local CANDYCORN_MAX = 34
+    // local CANDYCORN_MIN = 23
+    // local CANDYCORN_MAX = 34
+    local CREDIT_MIN = 1000
+    local CREDIT_MAX = 3000
     local spawnableLifetime = 120
     local pumpkinEntities = {}
 
@@ -53,14 +55,19 @@ if SERVER then
                         ply:SetHealth(math.min(ply:Health() + healthGain, ply:GetMaxHealth()))
                     end
         
-                    local candycorn = math.random(CANDYCORN_MIN, CANDYCORN_MAX)
-                    ply:ModifyPlayerBalance("candycorn", candycorn)
+                    // local candycorn = math.random(CANDYCORN_MIN, CANDYCORN_MAX)
+                    // ply:ModifyPlayerBalance("candycorn", candycorn)
         
-                    SavePlayerBalances(ply)
+                    // SavePlayerBalances(ply)
         
-                    net.Start("PumpkinCollected")
-                    net.WriteUInt(candycorn, 8)
-                    net.Send(ply)
+                    // net.Start("PumpkinCollected")
+                    // net.WriteUInt(candycorn, 8)
+                    // net.Send(ply)
+
+
+                    // NOTE: Can be kept for next year or revert back to candycorn
+                    local credits = math.random(CREDIT_MIN, CREDIT_MAX)
+                    UpdateCredits(ply, credits)
         
                     pumpkin:Remove()
                     table.RemoveByValue(pumpkinEntities, pumpkin)
@@ -93,10 +100,9 @@ if CLIENT then
         chat.AddText(
             Color(245, 126, 47), "◖You got ",
             Color(255, 196, 137), tostring(candycorn),
-            Color(245, 126, 47), " Candy Corn!◗"
+            Color(245, 126, 47), " Social Credits!◗"
         )
     end)
 
     MsgC(Color(57, 100, 245), "[HalloweenEvent] ", color_white, "pumpkins loaded\n")
 end
-
