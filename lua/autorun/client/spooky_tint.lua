@@ -5,11 +5,11 @@ if CLIENT then
     local function AdjustColorMod()
         local scr_w, scr_h = ScrW(), ScrH()
         local brightness_adjustment = brightness:GetFloat()
-        
+
         if scr_w > 1920 then
             brightness_adjustment = brightness_adjustment * 0.9
         end
-        
+
         return {
             ["$pp_colour_addr"] = 0.05,
             ["$pp_colour_addg"] = 0,
@@ -31,3 +31,4 @@ if CLIENT then
 end
 
 
+-- HIIHIHI
