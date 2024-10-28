@@ -3,38 +3,24 @@ if SERVER then
 
 // Environment Cleanser //
 
+	local EnvironmentSounds = {
+		["ambient_generic"] = true,
+		["env_fire"] = true,
+		["env_shake"] = true,
+		["env_soundscape_triggerable"] = true,
+		["env_soundscape"] = true,
+		["env_sun"] = true,
+		["env_tonemap_controller"] = true
+	}
+
     local function RemoveAllEnvironmentalSounds()
-        for _, ent in ipairs(ents.FindByClass("env_soundscape")) do
-            ent:Remove()
-        end
+		for _, Entity in ents.Iterator() do
+			if EnvironmentSounds[Entity:GetClass()] then
+				Entity:Remove()
+			end
+		end
 
-        for _, ent in ipairs(ents.FindByClass("ambient_generic")) do
-            ent:Remove()
-        end
-
-        for _, ent in ipairs(ents.FindByClass("env_soundscape_triggerable")) do
-            ent:Remove()
-        end
-
-        for _, ent in ipairs(ents.FindByClass("env_tonemap_controller")) do
-            ent:Remove()
-        end
-
-        for _, ent in ipairs(ents.FindByClass("env_fire")) do
-            ent:Remove()
-        end
-
-        for _, ent in ipairs(ents.FindByClass("env_shake")) do
-            ent:Remove()
-        end
-
-        for _, ent in ipairs(ents.FindByClass("env_sun")) do
-            ent:Remove()
-        end
-
-        for _, ply in ipairs(player.GetAll()) do
-            ply:SendLua("RunConsoleCommand('stopsound')")
-        end
+		BroadcastLua("RunConsoleCommand(\"stopsound\")")
     end
 
 // Custom Environment //
@@ -43,7 +29,7 @@ if SERVER then
         net.Start("ConfigureClientFog")
         net.Broadcast()
     end
-    
+
     local function ConfigureEnvironment()
         if not string.find(string.lower(game.GetMap()), "night") then
             RunConsoleCommand("Environment_ambientLightLevel", "2")
@@ -88,7 +74,7 @@ if CLIENT then
             render.FogColor(37, 38, 52)
             return true
         end)
-    
+
         hook.Add("SetupSkyboxFog", "HalloweenFogSkyboxSetupDirect", function(scale)
             render.FogMode(MATERIAL_FOG_LINEAR)
             render.FogStart(0 * scale)
@@ -108,7 +94,7 @@ if CLIENT then
             render.FogColor(37, 38, 52)
             return true
         end)
-    
+
         hook.Add("SetupSkyboxFog", "HalloweenFogSkyboxSetup", function(scale)
             render.FogMode(MATERIAL_FOG_LINEAR)
             render.FogStart(0 * scale)
