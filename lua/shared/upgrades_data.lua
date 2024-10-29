@@ -10,6 +10,7 @@ upgrades = {
     { name = "Chemical Resistance", unit = "", description = "% Damage reduction", defaultDescription = "Reduce damage from hazards", baseCost = 20, maxLevel = 2, valuePerLevel = 50 }
 }
 
+
 function CalculateUpgradeCost(upgrade) // I fear removing this
     return math.floor(upgrade.baseCost * math.pow(1.25, upgrade.currentLevel or 0))
 end
