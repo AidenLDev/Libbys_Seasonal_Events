@@ -49,33 +49,35 @@ if SERVER then
                 local inRange = ply:GetPos():DistToSqr(pumpkin:GetPos()) <= (COLLECTION_RANGE * COLLECTION_RANGE)
                 if IsValid(ply) and inRange then
                     ply:EmitSound("libbys/halloween/pumpkin_pickup.ogg", 40)
-        
+
                     if ply:Health() < ply:GetMaxHealth() then
                         local healthGain = math.random(HEALTH_MIN, HEALTH_MAX)
                         ply:SetHealth(math.min(ply:Health() + healthGain, ply:GetMaxHealth()))
                     end
-        
+
                     // local candycorn = math.random(CANDYCORN_MIN, CANDYCORN_MAX)
                     // ply:ModifyPlayerBalance("candycorn", candycorn)
-        
+
                     // SavePlayerBalances(ply)
-        
+
                     // net.Start("PumpkinCollected")
                     // net.WriteUInt(candycorn, 8)
                     // net.Send(ply)
 
 
                     // NOTE: Can be kept for next year or revert back to candycorn
-                    local credits = math.random(CREDIT_MIN, CREDIT_MAX)
-                    UpdateCredits(ply, credits)
-        
+					if isfunction(UpdateCredits) then
+						local credits = math.random(CREDIT_MIN, CREDIT_MAX)
+						UpdateCredits(ply, credits)
+					end
+
                     pumpkin:Remove()
                     table.RemoveByValue(pumpkinEntities, pumpkin)
                     break
                 end
             end
         end
-    end    
+    end
 
     hook.Add("Think", "PumpkinGlobalRangeCheck", function()
         for _, pumpkin in ipairs(pumpkinEntities) do
