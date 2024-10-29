@@ -36,12 +36,17 @@ return {
         end)
 
         hook.Add("OnPlayerHitGround", "MetalCrush_" .. ply:SteamID(), function(player, inWater, onFloater, speed)
+			if not IsFirstTimePredicted() then return end
+
             if player == ply and ply:GetNWBool("IsMetal") and speed > 200 then
                 local crushRadius = 200
                 local entities = ents.FindInSphere(ply:GetPos(), crushRadius)
+
                 for _, ent in ipairs(entities) do
-                    if ent:IsPlayer() and ent ~= ply then
-                        ent:Kill()
+                    if ent:IsPlayer() then
+						if ent ~= ply and ent:Alive() then
+                        	ent:Kill()
+						end
                     elseif ent:IsNPC() then
                         ent:TakeDamage(2500, ply, ply)
                     elseif ent:GetClass() == "prop_physics" then
@@ -99,5 +104,3 @@ return {
         return "Metal"
     end
 }
-
-
