@@ -283,8 +283,6 @@ if SERVER then
 			local ply = target
 			local regenLevel = ply.Upgrades and ply.Upgrades["Regeneration"] or 0
 
-			ply:SetHealth(math.max(ply:Health() - dmginfo:GetDamage(), 0))
-
 			if regenLevel > 0 and ply:Health() < ply:GetMaxHealth() then
 				if not ply.RegenerationActive then
 					ply.RegenerationActive = true
