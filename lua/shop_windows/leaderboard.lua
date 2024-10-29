@@ -87,7 +87,6 @@ function OpenWindow(contentPanel)
     end    
 
     local function AddLeaderboardRow(parent, rank, name, steamID, candycorn, souls)
-        PrintDebug(string.format("Adding row for %s (Rank %d, CandyCorn: %d, Souls: %d)", name, rank, candycorn, souls))
 
         local row = vgui.Create("DPanel", parent)
         row:SetTall(35)

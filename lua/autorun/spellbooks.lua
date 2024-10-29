@@ -207,11 +207,18 @@ if SERVER then
         return availableSpells[math.random(#availableSpells)]
     end
     
+    local function getMappedEnt(ply)
+        return ply.pk_pill_ent
+    end
+
     local function HandleSpellbookCollect(ply, spellbook)
         if not ply:Alive() or
            ply:GetNWBool("IsRandomizing", false) or
            ply:GetNWString("ActiveSpell", "") ~= "" or
            ply:GetNWBool("IsCasting", false) or
+           ply:GetNWBool("BuildMode", false) or
+           pk_pills.getMappedEnt(ply) or
+           ply:GetNWBool("_Kyle_Buildmode", false) or
            ply:GetNWBool("SpellInProgress", false) then
             return
         end
@@ -251,7 +258,6 @@ if SERVER then
             net.Send(ply)
         end)
     end
-        
 
     local function CheckSpellbookCollect(spellbook)
         local nearbyEntities = ents.FindInSphere(spellbook:GetPos(), COLLECTION_RANGE)
@@ -268,7 +274,10 @@ if SERVER then
         local spellName = ply:GetNWString("ActiveSpell", "")
         if spellName == "" or ply:GetNWBool("IsCasting", false) then return end
     
-    
+        if ply:GetNWBool("BuildMode") or pk_pills.getMappedEnt(ply) then
+            return
+        end
+
         if ply:InVehicle() or ply:GetNWBool("IsSitting", false) then
             return
         end
@@ -581,7 +590,6 @@ if CLIENT then
             if CurTime() - State.lastRandomized > 0.007 then
                 State.finalizedSpell = State.spellNames[math.random(#State.spellNames)]
                 State.lastRandomized = CurTime()
-                print("[DEBUG] Randomizing spell: " .. State.finalizedSpell)
             end
 
             local opacityProgress = math.Clamp((CurTime() - State.startOpacityTime) / 2, 0, 1)
@@ -642,7 +650,7 @@ if CLIENT then
         end
 
         if State.overlayAlpha > 0 then
-            surface.SetDrawColor(255, 255, 255, State.overlayAlpha)
+            surface.SetDrawColor(Config.baseColor.r, Config.baseColor.g, Config.baseColor.b, State.overlayAlpha)
             surface.SetMaterial(Config.overlay.texture)
             surface.DrawTexturedRect(0, 0, ScrW(), ScrH())
         end
