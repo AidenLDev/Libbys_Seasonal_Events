@@ -20,10 +20,18 @@ return {
         end
         hook.Add("EntityTakeDamage", "SuperHealthPreventDeath" .. ply:EntIndex(), PreventDeath)
 
+		hook.Add("PostEntityTakeDamage", "SuperHealth_FixMaxHP" .. ply:EntIndex(), function(Entity, Damage, bTookDamage)
+			if not bTookDamage then return end
+			if Entity ~= ply then return end
+
+			Entity:SetMaxHealth(math.max(Entity:Health(), 100))
+		end)
+
         for i = 1, totalHealthIncrements do
             timer.Simple(i * interval, function()
                 if IsValid(ply) then
                     ply:SetHealth(ply:Health() + healAmount)
+					ply:SetMaxHealth(math.max(ply:Health(), 100))
                 end
             end)
         end
@@ -33,6 +41,7 @@ return {
                 ply:SetNWBool("SpellInProgress", false)
                 ply:SetNWBool("Undying", false)
                 ply:SetNWBool("SpellOverlay", false)
+
                 hook.Remove("EntityTakeDamage", "SuperHealthPreventDeath" .. ply:EntIndex())
             end
         end)
@@ -41,7 +50,9 @@ return {
             ply:SetNWBool("SpellInProgress", false)
             ply:SetNWBool("Undying", false)
             ply:SetNWBool("SpellOverlay", false)
+
             hook.Remove("EntityTakeDamage", "SuperHealthPreventDeath" .. ply:EntIndex())
+			hook.Remove("PostEntityTakeDamage", "SuperHealth_FixMaxHP" .. ply:EntIndex())
         end)
 
         return nil
