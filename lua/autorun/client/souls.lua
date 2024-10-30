@@ -1,5 +1,8 @@
 local PARTICLE_RISE_TIME = 1.5
 
+local SOUND_SOUL_HOVER = "libbys/halloween/soul_hover.wav"
+local SOUND_SOUL_COLLECT = "libbys/halloween/souls_receive%u.ogg"
+
 hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, Victim)
 	local VictimOrigin = Victim:GetPos()
 
@@ -52,8 +55,14 @@ hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, 
 		if CurrentPosition:IsEqualTol(GoalPosition, 10) then
 			hook.Remove("Think", HookIdentifier)
 
-			local CollectSound = Format("libbys/halloween/souls_receive%u.ogg", math.random(1, 3))
+			local CollectSound = Format(SOUND_SOUL_COLLECT, math.random(1, 3))
 			Attacker:EmitSound(CollectSound, 65)
+
+			timer.Simple(SoundDuration(CollectSound), function()
+				if IsValid(Attacker) then
+					Attacker:StopSound(CollectSound)
+				end
+			end)
 
 			ParticleSystem:StopEmissionAndDestroyImmediately()
 		end
@@ -72,7 +81,13 @@ hook.Add("entity_killed", "PlaySoul", function(Data)
 	local ParticleSystem = CreateParticleSystem(game.GetWorld(), "vortigaunt_hand_glow", PATTACH_ABSORIGIN, 0, vector_origin)
 	if not IsValid(ParticleSystem) then return end
 
-	Victim:EmitSound("libbys/halloween/soul_hover.wav", 65)
+	Victim:EmitSound(SOUND_SOUL_HOVER, 65)
+
+	timer.Simple(SoundDuration(SOUND_SOUL_HOVER), function()
+		if IsValid(Victim) then
+			Victim:StopSound(SOUND_SOUL_HOVER)
+		end
+	end)
 
 	hook.Run("Halloween_Soul_Rise", ParticleSystem, Attacker, Victim)
 end)
