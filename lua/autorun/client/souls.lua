@@ -3,6 +3,25 @@ local PARTICLE_RISE_TIME = 1.5
 local SOUND_SOUL_HOVER = "libbys/halloween/soul_hover.wav"
 local SOUND_SOUL_COLLECT = "libbys/halloween/souls_receive%u.ogg"
 
+local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
+	hook.Remove("Think", HookIdentifier)
+
+	if IsValid(Attacker) then
+		local CollectSound = Format(SOUND_SOUL_COLLECT, math.random(1, 3))
+		Attacker:EmitSound(CollectSound, 65)
+
+		timer.Simple(SoundDuration(CollectSound), function()
+			if IsValid(Attacker) then
+				Attacker:StopSound(CollectSound)
+			end
+		end)
+	end
+
+	if IsValid(ParticleSystem) then
+		ParticleSystem:StopEmissionAndDestroyImmediately()
+	end
+end
+
 hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, Victim)
 	local VictimOrigin = Victim:GetPos()
 
@@ -52,19 +71,8 @@ hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, 
 		CurrentPosition:Set(NewPosition)
 
 		-- Ghetto collision
-		if CurrentPosition:IsEqualTol(GoalPosition, 10) then
-			hook.Remove("Think", HookIdentifier)
-
-			local CollectSound = Format(SOUND_SOUL_COLLECT, math.random(1, 3))
-			Attacker:EmitSound(CollectSound, 65)
-
-			timer.Simple(SoundDuration(CollectSound), function()
-				if IsValid(Attacker) then
-					Attacker:StopSound(CollectSound)
-				end
-			end)
-
-			ParticleSystem:StopEmissionAndDestroyImmediately()
+		if CurrentPosition:IsEqualTol(GoalPosition, 10) or (not IsValid(Attacker) or not Attacker:Alive()) then
+			CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 		end
 	end)
 end)
