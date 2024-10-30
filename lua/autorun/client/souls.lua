@@ -3,6 +3,14 @@ local PARTICLE_RISE_TIME = 1.5
 local SOUND_SOUL_HOVER = "libbys/halloween/soul_hover.wav"
 local SOUND_SOUL_COLLECT = "libbys/halloween/souls_receive%u.ogg"
 
+-- _G.SoundDuration is broken
+local SOUND_DURATIONS = {
+	["libbys/halloween/soul_hover.wav"] = 4.931,
+	["libbys/halloween/souls_receive1.ogg"] = 3.564,
+	["libbys/halloween/souls_receive2.ogg"] = 3.022,
+	["libbys/halloween/souls_receive3.ogg"] = 3.458
+}
+
 local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 	hook.Remove("Think", HookIdentifier)
 
@@ -10,7 +18,7 @@ local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 		local CollectSound = Format(SOUND_SOUL_COLLECT, math.random(1, 3))
 		Attacker:EmitSound(CollectSound, 65)
 
-		timer.Simple(SoundDuration(CollectSound), function()
+		timer.Simple(SOUND_DURATIONS[CollectSound], function()
 			if IsValid(Attacker) then
 				Attacker:StopSound(CollectSound)
 			end
@@ -91,7 +99,7 @@ hook.Add("entity_killed", "PlaySoul", function(Data)
 
 	Victim:EmitSound(SOUND_SOUL_HOVER, 65)
 
-	timer.Simple(SoundDuration(SOUND_SOUL_HOVER), function()
+	timer.Simple(SOUND_DURATIONS[SOUND_SOUL_HOVER], function()
 		if IsValid(Victim) then
 			Victim:StopSound(SOUND_SOUL_HOVER)
 		end
