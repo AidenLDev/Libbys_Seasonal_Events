@@ -1,0 +1,10 @@
+{
+	"title"		:	"Libby's Halloween Event",
+	"type"		:	"ServerContent",
+	"tags"		:	[ "Cartoon", "Fun" ],
+	"ignore"	:
+	[
+		"*.git*",
+		"README.md"
+	]
+}
