@@ -1,3 +1,9 @@
+if LibbyEvent then
+	for _ = 1, 5 do
+		ErrorNoHalt("EITHER ANOTHER EVENT IS ALREADY INSTALLED OR THE EVENT HAS BEEN RELOADED! PROCEED WITH CAUTION!\n")
+	end
+end
+
 LibbyEvent = LibbyEvent or {}
 
 function LibbyEvent.IncludeShared(Path) -- includeCS
