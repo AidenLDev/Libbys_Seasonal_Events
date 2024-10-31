@@ -1,3 +1,6 @@
+AddCSLuaFile("shop_windows/leaderboard.lua")
+AddCSLuaFile("shop_windows/upgrades.lua")
+
 util.AddNetworkString("OpenShopMenu")
 util.AddNetworkString("CheckBalance")
 util.AddNetworkString("ReturnBalance")
