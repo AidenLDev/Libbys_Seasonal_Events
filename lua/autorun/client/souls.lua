@@ -11,6 +11,18 @@ local SOUND_DURATIONS = {
 	["libbys/halloween/souls_receive3.ogg"] = 3.458
 }
 
+local function AllIsValid(...)
+	for i = 1, select("#", ...) do
+		local Object = select(i, ...)
+
+		if not IsValid(Object) then
+			return false
+		end
+	end
+
+	return true
+end
+
 local function DestroySoul(ParticleSystem)
 	if IsValid(ParticleSystem) then
 		ParticleSystem:StopEmissionAndDestroyImmediately()
@@ -35,7 +47,7 @@ local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 end
 
 hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, Victim)
-	if not IsValid(Attacker) or not IsValid(Victim) then
+	if not AllIsValid(ParticleSystem, Attacker, Victim) then
 		DestroySoul(ParticleSystem)
 		return
 	end
@@ -53,6 +65,11 @@ hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, 
 
 	-- Ew
 	hook.Add("Think", HookIdentifier, function()
+		if not IsValid(ParticleSystem) then
+			CollectSoul(ParticleSystem, Attacker, HookIdentifier)
+			return
+		end
+
 		local CurrentTime = CurTime()
 
 		local DeltaTime = CurrentTime - RiseStart
@@ -70,7 +87,7 @@ hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, 
 end)
 
 hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, Victim, VictimOrigin, VictimTop)
-	if not IsValid(Attacker) then
+	if not AllIsValid(ParticleSystem, Attacker, Victim) then
 		DestroySoul(ParticleSystem)
 		return
 	end
@@ -79,6 +96,11 @@ hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, 
 	local HookIdentifier = "Halloween_Soul_Home_" .. CurTime()
 
 	hook.Add("Think", HookIdentifier, function()
+		if not IsValid(Attacker) or not IsValid(ParticleSystem) then
+			CollectSoul(ParticleSystem, Attacker, HookIdentifier)
+			return
+		end
+
 		local GoalPosition = Attacker:LocalToWorld(Attacker:OBBCenter())
 
 		local GoalDistance = CurrentPosition:Distance(GoalPosition) -- wtf expensive client operation
@@ -96,7 +118,7 @@ hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, 
 		CurrentPosition:Set(NewPosition)
 
 		-- Ghetto collision
-		if CurrentPosition:IsEqualTol(GoalPosition, 10) or (not IsValid(Attacker) or not Attacker:Alive()) then
+		if CurrentPosition:IsEqualTol(GoalPosition, 10) then
 			CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 		end
 	end)
@@ -108,7 +130,7 @@ hook.Add("entity_killed", "PlaySoul", function(Data)
 	local Victim = Entity(Data.entindex_killed)
 
 	if Attacker == Victim then return end
-	if not IsValid(Attacker) or not IsValid(Victim) then return end
+	if not AllIsValid(Attacker, Victim) then return end
 	if not Attacker:IsPlayer() or not Victim:IsPlayer() then return end
 
 	local ParticleSystem = CreateParticleSystem(game.GetWorld(), "vortigaunt_hand_glow", PATTACH_ABSORIGIN, 0, vector_origin)
