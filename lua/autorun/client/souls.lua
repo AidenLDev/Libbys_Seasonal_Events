@@ -81,10 +81,13 @@ hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, 
 	hook.Add("Think", HookIdentifier, function()
 		local GoalPosition = Attacker:LocalToWorld(Attacker:OBBCenter())
 
-		-- Move 500 units towards the player per thing
+		local GoalDistance = CurrentPosition:Distance(GoalPosition) -- wtf expensive client operation
+		local MoveDistance = math.max(GoalDistance, 1500)
+
+		-- Move at least 1500 units towards the player per iteration
 		local MoveDirection = GoalPosition - CurrentPosition
 		MoveDirection:Normalize()
-		MoveDirection:Mul(500 * FrameTime())
+		MoveDirection:Mul(MoveDistance * FrameTime())
 
 		local NewPosition = Vector(CurrentPosition)
 		NewPosition:Add(MoveDirection)
