@@ -121,15 +121,15 @@ function LibbyUtil.GetSpawnCeiling()
 	local PlayerSpawns = LibbyUtil.GetPlayerSpawns()
 	local ChosenSpawn = table.RandomValueI(PlayerSpawns)
 
+	local WorldMins, WorldMaxs = LibbyEvent.util.GetWorldBounds()
+
 	if not IsValid(ChosenSpawn) then
 		ErrorNoHaltWithStack("Can't find valid spawn to test ceiling")
-		return
+		return WorldMaxs.z
 	end
 
 	local SpawnPos = ChosenSpawn:GetPos()
 	SpawnPos.z = SpawnPos.z + 72 -- What the fuck why is it underground
-
-	local WorldMins, WorldMaxs = LibbyEvent.util.GetWorldBounds()
 
 	local TraceData = LibbyUtil.GetTraceData()
 	LibbyUtil.CleanTraceData()
