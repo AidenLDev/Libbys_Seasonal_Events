@@ -1,5 +1,4 @@
-LibbyEvent.IncludeShared("libbys_event_base/util.lua")
-
+LibbyEvent.IncludeShared("libbys_event_base/shared/util.lua")
 LibbyEvent.IncludeShared("libbys_event_base/shared/extensions/string.lua")
 LibbyEvent.IncludeShared("libbys_event_base/shared/extensions/table.lua")
 
