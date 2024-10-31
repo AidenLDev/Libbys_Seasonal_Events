@@ -11,3 +11,13 @@ function table.ForEach(Table, Callback, ...) -- table.foreachi but better
 
 	return nil
 end
+
+function table.RandomKeyI(Table)
+	return math.random(1, #Table)
+end
+
+function table.RandomValueI(Table)
+	local Key = table.RandomKeyI(Table)
+
+	return Table[Key], Key
+end
