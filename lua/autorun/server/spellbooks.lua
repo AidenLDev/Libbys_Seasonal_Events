@@ -270,7 +270,7 @@ local function CastSpell(ply)
     local spellName = ply:GetNWString("ActiveSpell", "")
     if spellName == "" or ply:GetNWBool("IsCasting", false) then return end
 
-    if ply:GetNWBool("BuildMode") or pk_pills.getMappedEnt(ply) then
+    if ply:GetNWBool("BuildMode") or (pk_pills and pk_pills.getMappedEnt(ply) or false) then
         return
     end
 
