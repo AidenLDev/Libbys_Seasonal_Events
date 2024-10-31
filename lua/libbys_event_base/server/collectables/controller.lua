@@ -46,6 +46,8 @@ function Collectables.FindCollectableSpawn(CollectableMins, CollectableMaxs)
 	SpawnPos:Set(TraceResult.HitPos)
 	SpawnPos:Add(TraceResult.HitNormal)
 
+	if not util.IsInWorld(SpawnPos) then return end
+
 	return SpawnPos
 end
 
