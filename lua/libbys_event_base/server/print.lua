@@ -14,5 +14,5 @@ function LibbyEvent.PrintToPlayer(Player, Message, ...)
 		end
 	end
 
-	LibbyEvent.SendLongLua(Player, [[MsgC(%s, "\n")]], Message)
+	LibbyEvent.SendLongLua(Player, [[MsgN(%s, "\n")]], Message)
 end
