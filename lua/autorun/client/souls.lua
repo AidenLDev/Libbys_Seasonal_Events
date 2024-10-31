@@ -11,6 +11,12 @@ local SOUND_DURATIONS = {
 	["libbys/halloween/souls_receive3.ogg"] = 3.458
 }
 
+local function DestroySoul(ParticleSystem)
+	if IsValid(ParticleSystem) then
+		ParticleSystem:StopEmissionAndDestroyImmediately()
+	end
+end
+
 local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 	hook.Remove("Think", HookIdentifier)
 
@@ -25,12 +31,15 @@ local function CollectSoul(ParticleSystem, Attacker, HookIdentifier)
 		end)
 	end
 
-	if IsValid(ParticleSystem) then
-		ParticleSystem:StopEmissionAndDestroyImmediately()
-	end
+	DestroySoul(ParticleSystem)
 end
 
 hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, Victim)
+	if not IsValid(Attacker) or not IsValid(Victim) then
+		DestroySoul(ParticleSystem)
+		return
+	end
+
 	local VictimOrigin = Victim:GetPos()
 
 	local VictimTop = Victim:OBBCenter()
@@ -61,6 +70,11 @@ hook.Add("Halloween_Soul_Rise", "SoulRiser", function(ParticleSystem, Attacker, 
 end)
 
 hook.Add("Halloween_Soul_Home", "SoulHomer", function(ParticleSystem, Attacker, Victim, VictimOrigin, VictimTop)
+	if not IsValid(Attacker) then
+		DestroySoul(ParticleSystem)
+		return
+	end
+
 	local CurrentPosition = Vector(VictimTop)
 	local HookIdentifier = "Halloween_Soul_Home_" .. CurTime()
 
