@@ -206,10 +206,6 @@ local function GetRandomSpellExcludingLast(ply, spells)
     return availableSpells[math.random(#availableSpells)]
 end
 
-local function getMappedEnt(ply)
-    return ply.pk_pill_ent
-end
-
 local function HandleSpellbookCollect(ply, spellbook)
     if not ply:Alive() or
 		ply:GetNWBool("IsRandomizing", false) or
