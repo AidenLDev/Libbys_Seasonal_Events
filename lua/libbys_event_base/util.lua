@@ -45,8 +45,6 @@ function LibbyUtil.GetPlayerSpawns()
 	-- https://github.com/Facepunch/garrysmod/blob/master/garrysmod/gamemodes/base/gamemode/player.lua
 	-- Fucking hell
 
-	print("Building player spawns")
-
 	local PlayerSpawns = ents.FindByClass("info_player_start")
 
 	table.Add(PlayerSpawns, ents.FindByClass("info_player_deathmatch"))
