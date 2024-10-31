@@ -1,8 +1,11 @@
 LibbyEvent.Collectables = LibbyEvent.Collectables or {}
 local Collectables = LibbyEvent.Collectables
 
+AccessorFunc(Collectables, "m_strClassName", "ClassName", FORCE_STRING)
+Collectables:SetClassName("libbys_event_collectable")
+
 function Collectables.Create(Position, Model)
-	local Collectable = ents.Create("libbys_event_collectable")
+	local Collectable = ents.Create(Collectables:GetClassName())
 	if not IsValid(Collectable) then return NULL end
 
 	Collectable:SetPos(Position)
@@ -54,7 +57,7 @@ end
 function Collectables.CreateAtRandom(Model, Attempts)
 	Attempts = tonumber(Attempts) or 10
 
-	local Collectable = ents.Create("libbys_event_collectable")
+	local Collectable = ents.Create(Collectables:GetClassName())
 	if not IsValid(Collectable) then return NULL end
 
 	Collectable:SetNoDraw(true)
