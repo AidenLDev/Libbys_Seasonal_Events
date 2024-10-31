@@ -8,4 +8,5 @@ LibbyEvent.IncludeClient("libbys_event_base/client/sendlua.lua")
 
 LibbyEvent.IncludeServer("libbys_event_base/server/print.lua")
 
-LibbyEvent.IncludeServer("libbys_event_base/server/collectables.lua")
+LibbyEvent.IncludeServer("libbys_event_base/server/collectables/controller.lua")
+LibbyEvent.IncludeServer("libbys_event_base/server/collectables/spawner.lua")
