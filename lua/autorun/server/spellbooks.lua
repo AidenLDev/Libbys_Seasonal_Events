@@ -130,7 +130,7 @@ local function LoadSpells()
                     DisplayName = spellData.GetDisplayName()
                 }
                 table.insert(cachedSpells, spellInfo)
-            end                
+            end
         end
     end
 
@@ -160,7 +160,7 @@ end
 
 function MarkSpellAsFinished(ply)
     if not IsValid(ply) then return end
-    
+
     ply:SetNWBool("SpellInProgress", false)
     ply:SetNWBool("IsCasting", false)
     ply:SetNWBool("IsRandomizing", false)
@@ -187,7 +187,7 @@ local function SpellCastFailure(ply)
         ply:Give(prevWeapon)
         ply:SelectWeapon(prevWeapon)
     end
-end    
+end
 
 local function GetRandomSpellExcludingLast(ply, spells)
     local lastSpell = playerLastSpells[ply:SteamID()]
@@ -206,19 +206,16 @@ local function GetRandomSpellExcludingLast(ply, spells)
     return availableSpells[math.random(#availableSpells)]
 end
 
-local function getMappedEnt(ply)
-    return ply.pk_pill_ent
-end
-
 local function HandleSpellbookCollect(ply, spellbook)
     if not ply:Alive() or
-       ply:GetNWBool("IsRandomizing", false) or
-       ply:GetNWString("ActiveSpell", "") ~= "" or
-       ply:GetNWBool("IsCasting", false) or
-       ply:GetNWBool("BuildMode", false) or
-       pk_pills.getMappedEnt(ply) or
-       ply:GetNWBool("_Kyle_Buildmode", false) or
-       ply:GetNWBool("SpellInProgress", false) then
+		ply:GetNWBool("IsRandomizing", false) or
+		ply:GetNWString("ActiveSpell", "") ~= "" or
+		ply:GetNWBool("IsCasting", false) or
+		ply:GetNWBool("BuildMode", false) or
+		(pk_pills and pk_pills.getMappedEnt(ply) or false) or
+		ply:GetNWBool("_Kyle_Buildmode", false) or
+		ply:GetNWBool("SpellInProgress", false) then
+
         return
     end
 
@@ -267,13 +264,13 @@ local function CheckSpellbookCollect(spellbook)
             break
         end
     end
-end    
+end
 
 local function CastSpell(ply)
     local spellName = ply:GetNWString("ActiveSpell", "")
     if spellName == "" or ply:GetNWBool("IsCasting", false) then return end
 
-    if ply:GetNWBool("BuildMode") or pk_pills.getMappedEnt(ply) then
+    if ply:GetNWBool("BuildMode") or (pk_pills and pk_pills.getMappedEnt(ply) or false) then
         return
     end
 
@@ -295,7 +292,7 @@ local function CastSpell(ply)
         end
 
         if not IsValid(spellViewModel) then
-        end            
+        end
     else
         return
     end
@@ -310,14 +307,14 @@ local function CastSpell(ply)
 
     ply:SetNWBool("IsCasting", true)
     local animDuration = 1
-    
+
     local function InterruptMonitor()
         if not IsValid(ply) or not ply:Alive() or ply:InVehicle() or ply:GetNWBool("IsSitting", false) then
             SpellCastFailure(ply)
             timer.Remove("CastingInterruptTimer_" .. ply:SteamID())
         end
     end
-    
+
 
     timer.Create("CastingInterruptTimer_" .. ply:SteamID(), 0.1, 0, InterruptMonitor)
 
@@ -338,7 +335,7 @@ local function CastSpell(ply)
             local spellData = include(spellScript)
             if spellData and isfunction(spellData.Cast) then
                 local result = spellData.Cast(ply)
-                
+
                 ply:SetNWBool("SpellOverlay", true)
                 if result == false then
                     MarkSpellAsFinished(ply)
@@ -370,7 +367,7 @@ local function CastSpell(ply)
             ClearPlayerSpell(ply)
         end
     end)
-end    
+end
 
 function GiveSpellToPlayerAndCast(ply, spellName)
     if not IsValid(ply) or not file.Exists("spells/" .. spellName .. ".lua", "LUA") then
