@@ -121,7 +121,7 @@ function LibbyUtil.GetSpawnCeiling()
 	local PlayerSpawns = LibbyUtil.GetPlayerSpawns()
 	local ChosenSpawn = table.RandomValueI(PlayerSpawns)
 
-	local WorldMins, WorldMaxs = LibbyEvent.util.GetWorldBounds()
+	local WorldMins, WorldMaxs = LibbyUtil.GetWorldBounds()
 
 	if not IsValid(ChosenSpawn) then
 		ErrorNoHaltWithStack("Can't find valid spawn to test ceiling")
