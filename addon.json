@@ -1,10 +1,9 @@
 {
-	"title"		:	"Libby's Halloween Event",
+	"title"		:	"Libby's Event Base",
 	"type"		:	"ServerContent",
 	"tags"		:	[ "Cartoon", "Fun" ],
 	"ignore"	:
 	[
-		"*.git*",
-		"README.md"
+		"*.git*"
 	]
 }
