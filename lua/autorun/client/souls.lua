@@ -109,7 +109,7 @@ hook.Add("entity_killed", "PlaySoul", function(Data)
 
 	if Attacker == Victim then return end
 	if not IsValid(Attacker) or not IsValid(Victim) then return end
-	if not Attacker:IsPlayer() then return end
+	if not Attacker:IsPlayer() or not Victim:IsPlayer() then return end
 
 	local ParticleSystem = CreateParticleSystem(game.GetWorld(), "vortigaunt_hand_glow", PATTACH_ABSORIGIN, 0, vector_origin)
 	if not IsValid(ParticleSystem) then return end
