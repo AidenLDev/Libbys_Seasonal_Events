@@ -162,3 +162,10 @@ function LibbyUtil.TryXTimes(Callback, Times, ...)
 
 	return nil
 end
+
+function LibbyUtil.DecimalDigits(Number)
+	local String = tostring(Number)
+	string.Replace(String, ".", "")
+
+	return tonumber(String) or -1
+end
