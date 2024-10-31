@@ -38,7 +38,7 @@ function LibbyUtil.GetWorldBounds()
 end
 
 function LibbyUtil.GetPlayerSpawns()
-	if istable(LibbyUtil.PlayerSpawns) then
+	if istable(LibbyUtil.PlayerSpawns) and IsTableOfEntitiesValid(LibbyUtil.PlayerSpawns) then
 		return LibbyUtil.PlayerSpawns
 	end
 
@@ -128,12 +128,15 @@ function LibbyUtil.GetSpawnCeiling()
 		return
 	end
 
+	local SpawnPos = ChosenSpawn:GetPos()
+	SpawnPos.z = SpawnPos.z + 72 -- What the fuck why is it underground
+
 	local WorldMins, WorldMaxs = LibbyEvent.util.GetWorldBounds()
 
 	local TraceData = LibbyUtil.GetTraceData()
 	LibbyUtil.CleanTraceData()
 
-	TraceData.start = ChosenSpawn:GetPos()
+	TraceData.start = SpawnPos
 	TraceData.endpos = Vector(TraceData.start.x, TraceData.start.y, WorldMaxs.z)
 	TraceData.mask = MASK_PLAYERSOLID_BRUSHONLY
 	TraceData.collisiongroup = COLLISION_GROUP_PLAYER_MOVEMENT
