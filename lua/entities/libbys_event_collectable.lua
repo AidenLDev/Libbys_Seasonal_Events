@@ -16,6 +16,7 @@ if CLIENT then
 	ENT.RenderGroup = RENDERGROUP_OPAQUE
 
 	AccessorFunc(ENT, "m_bRenderDebug", "RenderDebug", FORCE_BOOL)
+	AccessorFunc(ENT, "m_flSpawnTime", "SpawnTime", FORCE_NUMBER)
 
 	AccessorFunc(ENT, "m_flBobAmount", "BobAmount", FORCE_NUMBER)
 	AccessorFunc(ENT, "m_bAllowNegativeBob", "AllowNegativeBob", FORCE_BOOL)
@@ -35,6 +36,8 @@ function ENT:Initialize()
 	self:SelectModel()
 
 	if CLIENT then
+		self:SetSpawnTime(CurTime())
+
 		self:SetBobAmount(10)
 		self:SetSpinSpeed(64)
 		self:SetAllowNegativeBob(false)
@@ -67,7 +70,7 @@ if CLIENT then
 		local BobAmount = self:GetBobAmount()
 		if BobAmount <= 0 then return end
 
-		local BobPercentage = math.sin(CurTime())
+		local BobPercentage = math.sin(CurTime() - self:GetSpawnTime())
 		BobAmount = math.Remap(BobPercentage, -1, 1, -BobAmount, BobAmount)
 
 		if BobAmount < 0 and not self:GetAllowNegativeBob() then
