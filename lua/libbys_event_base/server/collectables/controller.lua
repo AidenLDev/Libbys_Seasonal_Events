@@ -32,11 +32,11 @@ function Collectables.TraceToFloor(WorldMins, CollectableMins, CollectableMaxs, 
 	return LibbyEvent.util.RunTrace(true)
 end
 
-function Collectables.GetSpawnParameters()
+function Collectables.GetSpawnParameters(CollectableMins, CollectableMaxs)
 	local SpawnCeiling, ChosenSpawn = LibbyEvent.util.GetSpawnCeiling()
 	local ChosenSpawnPos = ChosenSpawn:GetPos()
 
-	local MinX, MinY, MaxX, MaxY = LibbyEvent.util.FindWorldEdges(Vector(ChosenSpawnPos.x, ChosenSpawnPos.y, SpawnCeiling))
+	local MinX, MinY, MaxX, MaxY = LibbyEvent.util.FindWorldEdges(Vector(ChosenSpawnPos.x, ChosenSpawnPos.y, SpawnCeiling), CollectableMins, CollectableMaxs)
 
 	return SpawnCeiling, MinX, MinY, MaxX, MaxY
 end
@@ -76,9 +76,9 @@ function Collectables.CreateAtRandom(Model, Attempts)
 		Collectable:SetModel(Model)
 	end
 
-	local SpawnCeiling, MinX, MinY, MaxX, MaxY = Collectables.GetSpawnParameters()
-
 	local CollectableMins, CollectableMaxs = Collectable:GetCollisionBounds()
+	local SpawnCeiling, MinX, MinY, MaxX, MaxY = Collectables.GetSpawnParameters(CollectableMins, CollectableMaxs)
+
 	local SpawnPos = LibbyEvent.util.TryXTimes(Collectables.FindCollectableSpawn, Attempts, CollectableMins, CollectableMaxs, SpawnCeiling, MinX, MinY, MaxX, MaxY)
 
 	if not SpawnPos then

@@ -149,13 +149,13 @@ function LibbyUtil.GetSpawnCeiling()
 	return TraceResult.HitPos.z + TraceResult.HitNormal.z, ChosenSpawn
 end
 
-function LibbyUtil.FindWorldEdge(CeilingPos, EndPos)
+function LibbyUtil.FindWorldEdge(CeilingPos, EndPos, Hull)
 	local TraceData = LibbyUtil.GetTraceData()
 
 	TraceData.start = CeilingPos
 	TraceData.endpos = EndPos
 
-	local TraceResult = LibbyUtil.RunTrace()
+	local TraceResult = LibbyUtil.RunTrace(Hull)
 
 	if not TraceResult.Hit then
 		return CeilingPos
@@ -164,7 +164,7 @@ function LibbyUtil.FindWorldEdge(CeilingPos, EndPos)
 	return TraceResult.HitPos + TraceResult.HitNormal
 end
 
-function LibbyUtil.FindWorldEdges(CeilingPos)
+function LibbyUtil.FindWorldEdges(CeilingPos, Mins, Maxs)
 	local WorldMins, WorldMaxs = LibbyUtil.GetWorldBounds()
 
 	local TraceData = LibbyUtil.GetTraceData()
@@ -173,10 +173,16 @@ function LibbyUtil.FindWorldEdges(CeilingPos)
 	TraceData.mask = MASK_PLAYERSOLID_BRUSHONLY
 	TraceData.collisiongroup = COLLISION_GROUP_PLAYER_MOVEMENT
 
-	local MinsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMins.x, CeilingPos.y, CeilingPos.z))
-	local MinsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMins.y, CeilingPos.z))
-	local MaxsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMaxs.x, CeilingPos.y, CeilingPos.z))
-	local MaxsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMaxs.y, CeilingPos.z))
+	local Hull = isvector(Mins) and isvector(Maxs)
+	if Hull then
+		TraceData.mins = Mins
+		TraceData.maxs = Maxs
+	end
+
+	local MinsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMins.x, CeilingPos.y, CeilingPos.z), Hull)
+	local MinsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMins.y, CeilingPos.z), Hull)
+	local MaxsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMaxs.x, CeilingPos.y, CeilingPos.z), Hull)
+	local MaxsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMaxs.y, CeilingPos.z), Hull)
 
 	return MinsX.x, MinsY.y, MaxsX.x, MaxsY.y
 end
