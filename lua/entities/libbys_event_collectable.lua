@@ -17,9 +17,13 @@ if CLIENT then
 
 	AccessorFunc(ENT, "m_flSpawnTime", "SpawnTime", FORCE_NUMBER)
 
+	AccessorFunc(ENT, "m_bShouldAnimateInternal", "ShouldAnimate_Internal", FORCE_BOOL)
 	AccessorFunc(ENT, "m_flBobAmount", "BobAmount", FORCE_NUMBER)
 	AccessorFunc(ENT, "m_bAllowNegativeBob", "AllowNegativeBob", FORCE_BOOL)
 	AccessorFunc(ENT, "m_flSpinSpeed", "SpinSpeed", FORCE_NUMBER)
+
+	AccessorFunc(ENT, "m_flAnimationDistance", "AnimationDistance", FORCE_NUMBER)
+	AccessorFunc(ENT, "m_flLastDistanceCheckTime", "LastDistanceCheckTime", FORCE_NUMBER)
 end
 
 if SERVER then
@@ -37,9 +41,13 @@ function ENT:Initialize()
 	if CLIENT then
 		self:SetSpawnTime(CurTime())
 
+		self:SetShouldAnimate_Internal(true)
 		self:SetBobAmount(10)
 		self:SetSpinSpeed(64)
 		self:SetAllowNegativeBob(false)
+
+		self:SetAnimationDistance(2048 * 2048)
+		self:SetLastDistanceCheckTime(0)
 	end
 
 	if SERVER then
@@ -82,9 +90,23 @@ if CLIENT then
 		self:SetRenderOrigin(RenderOrigin)
 	end
 
+	function ENT:CheckDrawDistance()
+		self:SetShouldAnimate_Internal(LocalPlayer():GetPos():DistToSqr(self:GetPos()) <= self:GetAnimationDistance())
+	end
+
 	function ENT:Draw()
-		self:Spin()
-		self:Bob()
+		local CurrentTime = CurTime()
+
+		if CurrentTime - self:GetLastDistanceCheckTime() >= 0.5 then
+			self:SetLastDistanceCheckTime(CurrentTime)
+
+			self:CheckDrawDistance()
+		end
+
+		if self:GetShouldAnimate_Internal() then
+			self:Spin()
+			self:Bob()
+		end
 
 		self:DrawModel()
 	end
