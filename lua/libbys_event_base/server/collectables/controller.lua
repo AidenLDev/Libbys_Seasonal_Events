@@ -19,7 +19,7 @@ function Collectables.Create(Position, Model)
 	return Collectable
 end
 
-function Collectables.TraceToFloor(WorldMins, WorldMaxs, CollectableMins, CollectableMaxs, StartPos)
+function Collectables.TraceToFloor(WorldMins, CollectableMins, CollectableMaxs, StartPos)
 	local TraceData = LibbyEvent.util.GetTraceData()
 	LibbyEvent.util.CleanTraceData()
 
@@ -35,18 +35,21 @@ end
 function Collectables.FindCollectableSpawn(CollectableMins, CollectableMaxs)
 	local WorldMins, WorldMaxs = LibbyEvent.util.GetWorldBounds()
 
-	local SpawnX = math.Rand(WorldMins.x, WorldMaxs.x)
-	local SpawnY = math.Rand(WorldMins.y, WorldMaxs.y)
-	local SpawnCeiling = LibbyEvent.util.GetSpawnCeiling()
+	local SpawnCeiling, ChosenSpawn = LibbyEvent.util.GetSpawnCeiling()
+	local ChosenSpawnPos = ChosenSpawn:GetPos()
+	local MinX, MinY, MaxX, MaxY = LibbyEvent.util.FindWorldEdges(Vector(ChosenSpawnPos.x, ChosenSpawnPos.y, SpawnCeiling))
 
-	local SpawnPos = Vector(SpawnX, SpawnY, SpawnCeiling)
-	local TraceResult = Collectables.TraceToFloor(WorldMins, WorldMaxs, CollectableMins, CollectableMaxs, SpawnPos)
+	local SpawnX = math.Rand(MinX, MaxX)
+	local SpawnY = math.Rand(MinY, MaxY)
+
+	local CeilingPos = Vector(SpawnX, SpawnY, SpawnCeiling)
+	local TraceResult = Collectables.TraceToFloor(WorldMins, CollectableMins, CollectableMaxs, CeilingPos)
 
 	if not TraceResult.Hit then return end
 	if bit.band(TraceResult.Contents, CONTENTS_WATER) == CONTENTS_WATER then return end
 	if TraceResult.HitNonWorld or TraceResult.HitNoDraw then return end
 
-	SpawnPos:Set(TraceResult.HitPos)
+	local SpawnPos = Vector(TraceResult.HitPos)
 	SpawnPos:Add(TraceResult.HitNormal)
 
 	if not util.IsInWorld(SpawnPos) then return end

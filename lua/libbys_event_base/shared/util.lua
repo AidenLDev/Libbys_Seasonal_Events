@@ -146,7 +146,39 @@ function LibbyUtil.GetSpawnCeiling()
 		return WorldMaxs.z
 	end
 
-	return TraceResult.HitPos.z + TraceResult.HitNormal.z
+	return TraceResult.HitPos.z + TraceResult.HitNormal.z, ChosenSpawn
+end
+
+function LibbyUtil.FindWorldEdge(CeilingPos, EndPos)
+	local TraceData = LibbyUtil.GetTraceData()
+
+	TraceData.start = CeilingPos
+	TraceData.endpos = EndPos
+
+	local TraceResult = LibbyUtil.RunTrace()
+
+	if not TraceResult.Hit then
+		return CeilingPos
+	end
+
+	return TraceResult.HitPos + TraceResult.HitNormal
+end
+
+function LibbyUtil.FindWorldEdges(CeilingPos)
+	local WorldMins, WorldMaxs = LibbyUtil.GetWorldBounds()
+
+	local TraceData = LibbyUtil.GetTraceData()
+	LibbyUtil.CleanTraceData()
+
+	TraceData.mask = MASK_PLAYERSOLID_BRUSHONLY
+	TraceData.collisiongroup = COLLISION_GROUP_PLAYER_MOVEMENT
+
+	local MinsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMins.x, CeilingPos.y, CeilingPos.z))
+	local MinsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMins.y, CeilingPos.z))
+	local MaxsX = LibbyUtil.FindWorldEdge(CeilingPos, Vector(WorldMaxs.x, CeilingPos.y, CeilingPos.z))
+	local MaxsY = LibbyUtil.FindWorldEdge(CeilingPos, Vector(CeilingPos.x, WorldMaxs.y, CeilingPos.z))
+
+	return MinsX.x, MinsY.y, MaxsX.x, MaxsY.y
 end
 
 function LibbyUtil.TryXTimes(Callback, Times, ...)
