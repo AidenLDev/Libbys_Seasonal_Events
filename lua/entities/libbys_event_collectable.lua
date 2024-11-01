@@ -15,7 +15,6 @@ if CLIENT then
 
 	ENT.RenderGroup = RENDERGROUP_OPAQUE
 
-	AccessorFunc(ENT, "m_bRenderDebug", "RenderDebug", FORCE_BOOL)
 	AccessorFunc(ENT, "m_flSpawnTime", "SpawnTime", FORCE_NUMBER)
 
 	AccessorFunc(ENT, "m_flBobAmount", "BobAmount", FORCE_NUMBER)
@@ -84,25 +83,6 @@ if CLIENT then
 	end
 
 	function ENT:Draw()
-		-- Debug visual of where it actually is
-		if self:GetRenderDebug() then
-			local RenderAngle = self:GetRenderAngles()
-			local RenderOrigin = self:GetRenderOrigin()
-
-			self:SetRenderAngles(angle_zero)
-			self:SetRenderOrigin(self:GetNetworkOrigin())
-			do
-				render.SetColorModulation(1, 0, 0)
-				do
-					self:DrawModel()
-					self:InvalidateBoneCache()
-				end
-				render.SetColorModulation(1, 1, 1)
-			end
-			self:SetRenderAngles(RenderAngle)
-			self:SetRenderOrigin(RenderOrigin)
-		end
-
 		self:Spin()
 		self:Bob()
 
