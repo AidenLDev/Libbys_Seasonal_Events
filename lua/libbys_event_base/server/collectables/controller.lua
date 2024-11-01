@@ -29,7 +29,7 @@ function Collectables.TraceToFloor(WorldMins, CollectableMins, CollectableMaxs, 
 	TraceData.maxs = CollectableMaxs
 	TraceData.mask = MASK_ALL
 
-	return LibbyEvent.util.RunTrace(true)
+	return LibbyEvent.util.RunTrace() -- Don't hull because TraceHull is broken serverside (Goes thru displacements)
 end
 
 function Collectables.GetSpawnParameters(CollectableMins, CollectableMaxs)
@@ -52,10 +52,14 @@ function Collectables.FindCollectableSpawn(CollectableMins, CollectableMaxs, Spa
 
 	if not TraceResult.Hit then return end
 	if bit.band(TraceResult.Contents, CONTENTS_WATER) == CONTENTS_WATER then return end
-	if TraceResult.HitNonWorld or TraceResult.HitNoDraw then return end
+	if TraceResult.HitNonWorld then return end
 
 	local SpawnPos = Vector(TraceResult.HitPos)
 	SpawnPos:Add(TraceResult.HitNormal)
+
+	-- Adjust for the lack of a hull trace
+	local CollectableHeight = (math.abs(CollectableMins.z) + math.abs(CollectableMaxs.z)) * 0.5
+	SpawnPos.z = SpawnPos.z + CollectableHeight
 
 	if not util.IsInWorld(SpawnPos) then return end
 
