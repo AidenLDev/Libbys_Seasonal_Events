@@ -73,7 +73,7 @@ function SWEP:CanPrimaryAttack()
 end
 
 function SWEP:PrimaryAttack()
-	if not self:CanPrimaryAttack() then print("|cant attack") return end
+	if not self:CanPrimaryAttack() then return end
 
 	self:SetNextPrimaryFire(CurTime() + self:GetSpellDuration())
 
