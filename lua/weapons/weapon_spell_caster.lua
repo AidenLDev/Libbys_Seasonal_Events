@@ -54,8 +54,10 @@ if SERVER then
 	function SWEP:UnDeploy()
 		local Owner = self:GetOwner()
 
-		Owner:SwitchToDefaultWeapon() -- GetPreviousWeapon is broken serverside, don't bother
-		Owner:StripWeapon(self:GetClass())
+		if Owner:IsPlayer() then
+			Owner:SwitchToDefaultWeapon() -- GetPreviousWeapon is broken serverside, don't bother
+			Owner:StripWeapon(self:GetClass())
+		end
 	end
 end
 
