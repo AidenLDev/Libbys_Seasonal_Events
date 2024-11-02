@@ -46,7 +46,7 @@ function string.IsOCEncapsulated(String)
 end
 
 function string.EncapsulateOC(String)
-	local Valid, HasOpener, HasCloser = string.IsOCEncapsulated(Message)
+	local Valid, HasOpener, HasCloser = string.IsOCEncapsulated(String)
 
 	if not Valid then
 		if HasOpener or HasCloser then
@@ -54,7 +54,7 @@ function string.EncapsulateOC(String)
 
 			return "__INVALID_ENCAP__"
 		else
-			Message = Format("[=[%s]=]", Message)
+			String = Format("[=[%s]=]", String)
 		end
 	end
 
