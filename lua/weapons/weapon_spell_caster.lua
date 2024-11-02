@@ -59,7 +59,11 @@ function SWEP:PlayCastAnimation()
 
 	if CastAnimation != -1 then
 		ViewModel:SendViewModelMatchingSequence(CastAnimation)
+
+		return ViewModel:SequenceDuration(CastAnimation)
 	end
+
+	return 0
 end
 
 function SWEP:CanPrimaryAttack()
@@ -77,10 +81,10 @@ function SWEP:PrimaryAttack()
 
 	if Owner:IsPlayer() then
 		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
-		self:PlayCastAnimation()
+		local CastTime = self:PlayCastAnimation()
 
 		if SERVER then
-			Owner:StripWeapon(self:GetClass())
+			timer.SimpleWithArguments(CastTime, Owner.StripWeapon, Owner, self:GetClass())
 		end
 	end
 end
