@@ -63,14 +63,13 @@ function SWEP:PlayCastAnimation()
 end
 
 function SWEP:CanPrimaryAttack()
-	if self:GetNextPrimaryFire() < CurTime() then return false end
+	if CurTime() < self:GetNextPrimaryFire() then return false end
 
 	return true
 end
 
 function SWEP:PrimaryAttack()
-	if not self:CanPrimaryAttack() then return end
-	if not IsFirstTimePredicted() then return end
+	if not self:CanPrimaryAttack() then print("|cant attack") return end
 
 	self:SetNextPrimaryFire(CurTime() + self:GetSpellDuration())
 
