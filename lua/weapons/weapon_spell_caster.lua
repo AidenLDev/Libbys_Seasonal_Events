@@ -44,10 +44,19 @@ function SWEP:Initialize()
 	self:SetHoldType("magic")
 end
 
-function SWEP:Deploy()
-	if not IsFirstTimePredicted() then return end
+if SERVER then
+	function SWEP:Deploy()
+		if not IsFirstTimePredicted() then return end
 
-	-- TODO?
+		-- TODO?
+	end
+
+	function SWEP:UnDeploy()
+		local Owner = self:GetOwner()
+
+		Owner:SwitchToDefaultWeapon() -- GetPreviousWeapon is broken serverside, don't bother
+		Owner:StripWeapon(self:GetClass())
+	end
 end
 
 function SWEP:PlayCastAnimation()
@@ -77,14 +86,13 @@ function SWEP:PrimaryAttack()
 
 	self:SetNextPrimaryFire(CurTime() + self:GetSpellDuration())
 
-	local Owner = self:GetOwner()
-
-	if Owner:IsPlayer() then
+	if self:GetOwner():IsPlayer() then
 		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+
 		local CastTime = self:PlayCastAnimation()
 
 		if SERVER then
-			timer.SimpleWithArguments(CastTime, Owner.StripWeapon, Owner, self:GetClass())
+			timer.SimpleWithArguments(CastTime, self.UnDeploy, self)
 		end
 	end
 end
