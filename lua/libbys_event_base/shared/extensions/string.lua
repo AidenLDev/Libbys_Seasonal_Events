@@ -44,3 +44,19 @@ function string.IsOCEncapsulated(String)
 
 	return false, HasOpener, HasCloser
 end
+
+function string.EncapsulateOC(String)
+	local Valid, HasOpener, HasCloser = string.IsOCEncapsulated(Message)
+
+	if not Valid then
+		if HasOpener or HasCloser then
+			error("Got invalid string encapsulation in 'string.EncapsulateOC'", 2)
+
+			return "__INVALID_ENCAP__"
+		else
+			Message = Format("[=[%s]=]", Message)
+		end
+	end
+
+	return String
+end
