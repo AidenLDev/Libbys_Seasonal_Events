@@ -126,6 +126,9 @@ if SERVER then
 	end
 
 	function ENT:Collect(Collector)
+		local ShouldCollect = hook.Run("LibbyEvent_ShouldCollect", self, Collector)
+		if ShouldCollect == false then return end
+
 		ProtectedCall(self.OnCollected, self, Collector)
 
 		self:Remove()
