@@ -6,3 +6,12 @@ function timer.CreateWithArguments(Identifier, Delay, Repetitions, Callback, ...
 		Callback(unpack(Arguments, 1, ArgumentCount))
 	end)
 end
+
+function timer.SimpleWithArguments(Delay, Callback, ...)
+	local ArgumentCount = select("#", ...)
+	local Arguments = { ... }
+
+	timer.Simple(Delay, function()
+		Callback(unpack(Arguments, 1, ArgumentCount))
+	end)
+end
