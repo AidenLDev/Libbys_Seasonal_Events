@@ -1,4 +1,4 @@
-function LibbyEvent.PrintToPlayer(Player, ...)
+local function BuildMsg(...)
 	local ParameterCount = select("#", ...)
 	local Parameters = { ... }
 
@@ -12,5 +12,13 @@ function LibbyEvent.PrintToPlayer(Player, ...)
 		Parameters[i] = Converted
 	end
 
-	LibbyEvent.SendLongLua(Player, [[MsgC(%s, "\n")]], table.concat(Parameters, ", "))
+	return table.concat(Parameters, ", ")
+end
+
+function LibbyEvent.PrintToPlayerConsole(Player, ...)
+	LibbyEvent.SendLongLua(Player, [[MsgC(%s, "\n")]], BuildMsg(...))
+end
+
+function LibbyEvent.PrintToPlayerChat(Player, ...)
+	LibbyEvent.SendLongLua(Player, [[chat.AddText(%s)]], BuildMsg(...))
 end
