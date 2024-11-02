@@ -207,3 +207,37 @@ function LibbyUtil.DecimalDigits(Number)
 
 	return tonumber(String) or -1
 end
+
+function LibbyUtil.GetConstructorStr(Object)
+	if IsColor(Object) then return "Color" end
+	if isentity(Object) then return "Entity" end
+	if isvector(Object) then return "Vector" end
+	if isangle(Object) then return "Angle" end
+
+	return tostring
+end
+
+function LibbyUtil.GetConstructorArgs(Object)
+	if IsColor(Object) or isvector(Object) or isangle(Object) then
+		return Object:Unpack()
+	end
+
+	if isentity(Object) then
+		return Object:EntIndex()
+	end
+
+	return nil
+end
+
+function LibbyUtil.ObjectToConstructorStr(Object)
+	local ConstructorStr = LibbyUtil.GetConstructorStr(Object)
+
+	-- Can't be converted nicely
+	if ConstructorStr == tostring then
+		return tostring(Object)
+	end
+
+	local ConstructorArgs = { LibbyUtil.GetConstructorArgs(Object) }
+
+	return Format("%s(%s)", ConstructorStr, table.concat(ConstructorArgs, ", ")), ConstructorStr
+end
