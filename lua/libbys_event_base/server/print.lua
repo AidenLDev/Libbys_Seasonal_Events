@@ -22,11 +22,3 @@ end
 function LibbyEvent.PrintToPlayerChat(Player, ...)
 	LibbyEvent.SendLongLua(Player, [[chat.AddText(%s)]], BuildMsg(...))
 end
-
-function LibbyEvent.PrintToPlayer(Player, ...)
-	-- Avoid building twice
-	local Built = BuildMsg(...)
-
-	LibbyEvent.SendLongLua(Player, [[MsgC(%s, "\n")]], Built)
-	LibbyEvent.SendLongLua(Player, [[chat.AddText(%s)]], Built)
-end
