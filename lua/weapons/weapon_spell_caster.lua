@@ -79,6 +79,8 @@ function SWEP:PrimaryAttack()
 		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 		self:PlayCastAnimation()
 
-		Owner:StripWeapon(self:GetClass())
+		if SERVER then
+			Owner:StripWeapon(self:GetClass())
+		end
 	end
 end
