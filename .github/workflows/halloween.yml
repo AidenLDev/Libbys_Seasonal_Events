@@ -24,10 +24,11 @@ jobs:
                   fetch-depth: 0
 
             - name: Upload to workshop
-              uses: m00nl1ght-dev/steam-workshop-deploy@v1
+              uses: Weilbyte/steam-workshop-upload
               with:
-                username: ${{ secrets.STEAM_ACCOUNT_USERNAME }}
-                password: ${{ secrets.STEAM_ACCOUNT_PASSWORD }}
-                path: /
-                appId: ${{ secrets.STEAM_APP_ID }}
-                publishedFileId: ${{ secrets.STEAM_WORKSHOP_ID }}
+                path: "/"
+                appid: ${{ secrets.STEAM_APP_ID }}
+                itemid: ${{ secrets.STEAM_WORKSHOP_ID }}
+              env:
+                STEAM_USERNAME: ${{ secrets.STEAM_ACCOUNT_USERNAME }}
+                STEAM_PASSWORD: ${{ secrets.STEAM_ACCOUNT_PASSWORD }}
