@@ -4,7 +4,6 @@
 	"tags"		:	[ "Cartoon", "Fun" ],
 	"ignore"	:
 	[
-		"*.git*",
-		"*.yml"
+		"*.git*"
 	]
 }
