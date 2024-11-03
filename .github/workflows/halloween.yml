@@ -24,7 +24,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Upload to workshop
-              uses: Weilbyte/steam-workshop-upload
+              uses: Weilbyte/steam-workshop-upload@v1.1
               with:
                 path: "/"
                 appid: ${{ secrets.STEAM_APP_ID }}
