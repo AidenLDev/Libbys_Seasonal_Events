@@ -11,3 +11,8 @@ LibbyEvent.IncludeServer("libbys_event_base/server/print.lua")
 
 LibbyEvent.IncludeServer("libbys_event_base/server/collectables/controller.lua")
 LibbyEvent.IncludeServer("libbys_event_base/server/collectables/spawner.lua")
+
+-- Halloween
+LibbyEvent.IncludeServer("libbys_event_halloween/server/resources.lua")
+LibbyEvent.IncludeServer("libbys_event_halloween/server/should_collect.lua")
+LibbyEvent.IncludeServer("libbys_event_halloween/server/pumpkins.lua")
