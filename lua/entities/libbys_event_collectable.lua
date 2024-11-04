@@ -30,14 +30,7 @@ if SERVER then
 	ENT.DoNotDuplicate = true
 end
 
-function ENT:SelectModel()
-	-- For override
-	self:SetModel("models/props_junk/watermelon01.mdl")
-end
-
 function ENT:Initialize()
-	self:SelectModel()
-
 	if CLIENT then
 		self:SetSpawnTime(CurTime())
 
